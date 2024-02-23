@@ -1,0 +1,18 @@
+﻿I'm sorry, but errors were detected in your script. Please correct the
+errors listed below, and try again.
+
+
+File "game/script.rpy", line 14: expected statement.
+    "Sign the agreement without objecting.":
+                                           ^
+
+File "game/script.rpy", line 17: expected statement.
+    "Question the landlord about the new terms.":
+                                                ^
+
+File "game/script.rpy", line 20: expected statement.
+    "Suggest revising the agreement.":
+                                     ^
+
+Ren'Py Version: Ren'Py 8.2.0.24012702
+Fri Feb 23 21:09:49 2024
