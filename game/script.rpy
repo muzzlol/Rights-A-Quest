@@ -3,8 +3,8 @@ define l = Character('Landlord', color="#f9ffca")
 
 label start:
     scene bg apartment
-    show landlord happy at right
-    show vikram neutral at left
+    show landlord at right
+    show vikram at left
     
     l "I'm glad you like the apartment, Vikram. Just sign here, and it's all yours."
     
