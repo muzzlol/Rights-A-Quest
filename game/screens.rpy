@@ -358,40 +358,77 @@ init python:
             print(error.read().decode("utf8", 'ignore'))
 # Set the width of the input field
 screen chatbot():
-    vbox:
-        xalign 0.65
-        yalign 0.0
-        xmaximum 700
+    tag menu
+    use game_menu(_("Chatbot"), scroll="viewport"):
 
-        # Chatbot title with appropriate size and alignment
-        null height 50
-        text "MY LEGAL BOT" size 50 align (0.5, 0.0)
-        null height 200
+        style_prefix "chatbot"
+        vbox:
+            xalign 0.65
+            yalign 0.0
+            xmaximum 700
 
-        # Frame with spacing for layout
-        frame:
-            # Adjusted hbox spacing to create space between input and button
-            vbox:
-                xsize 700
-                if response_displayed:
-                    if "[previousmsg]":
-                        text "YOU: [previousmsg]" size 20
-                    null height 10
-                    text "[chatbot_response]" size 20
-                hbox:
-                # Input field with fixed width and no dynamic adjustment
-                    input value VariableInputValue("user_input") length 400 xsize 680 ysize 50
-                    # Optional: Align input to the center horizontally
+            # Chatbot title with appropriate size and alignment
+            null height 50
+            text "MY LEGAL BOT" size 50 align (0.5, 0.0)
+            null height 200
 
-                    # Send button with fixed position relative to the input field
-                button:
-                    text "Send"
-                    xalign 0  # Align button to the right edge within the hbox
-                    # Maintain current action and variable updates
-                    action [Function(chatbot_action, user_input), SetVariable("user_input", ""), SetVariable("response_displayed", True), SetVariable("previousmsg", user_input)]
+            # Frame with spacing for layout
+            frame:
+                # Adjusted hbox spacing to create space between input and button
+                vbox:
+                    xsize 700
+                    if response_displayed:
+                        if "[previousmsg]":
+                            text "YOU: [previousmsg]" size 20
+                        null height 10
+                        text "[chatbot_response]" size 20
+                    hbox:
+                    # Input field with fixed width and no dynamic adjustment
+                        input value VariableInputValue("user_input") length 400 xsize 680 ysize 50
+                        # Optional: Align input to the center horizontally
 
-                # Conditional text display with appropriate sizeds
-                # Optional: Set alignment for the response text as needed
+                        # Send button with fixed position relative to the input field
+                    button:
+                        text "Send"
+                        xalign 0  # Align button to the right edge within the hbox
+                        # Maintain current action and variable updates
+                        action [Function(chatbot_action, user_input), SetVariable("user_input", ""), SetVariable("response_displayed", True), SetVariable("previousmsg", user_input)]
+
+                    # Conditional text display with appropriate sizeds
+                    # Optional: Set alignment for the response text as needed
+            
+screen gethelp():
+    tag menu
+    use game_menu(_("Get Help"), scroll="viewport"):
+
+        style_prefix "Get Help"
+        vbox:
+            xalign 0.65
+            yalign 0.0
+            xmaximum 700
+
+            # Chatbot title with appropriate size and alignment
+            null height 50
+            text "HELP IS AVAILABLE" size 50 align (0.5, 0.0)
+            null height 20
+
+            # Add the provided text with links
+            text "{a=https://childlineindia.org.in/}Childline India Foundation{/a}: Offers 24/7 emergency phone service for children in need of aid and assistance." size 25 align (0.25, 0.0)
+            null height 10
+            text "{a=http://bba.org.in/}Bachpan Bachao Andolan{/a}: Works to end child labor, trafficking, and provide legal aid for the protection of children’s rights." size 25 align (0.5, 0.0)
+            null height 10
+            text "{a=https://www.savethechildren.in/}Save the Children India{/a}: Focuses on education, health, protection, and humanitarian needs with special programs for legal literacy and support." size 25 align (0.5, 0.0)
+            null height 10
+            text "{a=https://www.lawyerscollective.org/}Lawyers Collective{/a}: An NGO with a dedicated focus on human rights and legal aid, including children’s rights." size 25 align (0.5, 0.0)
+            null height 10
+            text "{a=http://ncpcr.gov.in/}National Commission for Protection of Child Rights (NCPCR){/a}: A statutory body under the CPCR Act 2005, focused on children's rights and protection." size 25 align (0.25, 0.0)
+            null height 10
+            text "{a=http://nalsa.gov.in/}State Legal Services Authorities{/a}: Provide free legal services to the eligible candidates, including children needing legal assistance." size 25 align (0.25, 0.0)
+            null height 10
+            text "{a=http://www.legalserviceindia.com/}Legal Services India{/a}: Offers a platform for legal queries with access to legal documents and resources." size 25 align (0.5, 0.0)
+            null height 10
+            text "{a=http://probono-india.in/}ProBono India{/a}: Engages in legal literacy and awareness programs, and could offer expertise for legal issues discussed in your platform." size 25 align (0.5, 0.0)
+
 screen navigation():
 
     vbox:
@@ -424,7 +461,7 @@ screen navigation():
 
             textbutton _("Main Menu") action MainMenu()
         textbutton _("Chat") action ShowMenu("chatbot")
-        # textbutton _("Get help") action ShowMenu("gethelp")
+        textbutton _("Get help") action ShowMenu("gethelp")
         textbutton _("About") action ShowMenu("about")
 
         if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
