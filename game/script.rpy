@@ -48,8 +48,6 @@ image brother neutral:
 
 label start:
     play music "audio/steinsgate.mp3" volume 0.3
-    
-
     menu:
         "scenario : cyberbullying":
             jump cyberbully

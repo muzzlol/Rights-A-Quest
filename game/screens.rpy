@@ -900,6 +900,12 @@ screen preferences():
                 ## added here, to add additional creator-defined preferences.
 
             null height (4 * gui.pref_spacing)
+            vbox:
+                style_prefix "radio"
+                label _("Language")
+
+                textbutton "English" text_font "DejaVuSans.ttf" action Language(None)
+                textbutton "Telugu" text_font "Gidugu.ttf" action Language("telugu")
 
             hbox:
                 style_prefix "slider"
