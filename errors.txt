@@ -2,17 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 14: expected statement.
-    "Sign the agreement without objecting.":
-                                           ^
-
-File "game/script.rpy", line 17: expected statement.
-    "Question the landlord about the new terms.":
-                                                ^
-
-File "game/script.rpy", line 20: expected statement.
-    "Suggest revising the agreement.":
-                                     ^
+File "game/script.rpy", line 48: Line is followed by a block, despite not being a menu choice. Did you forget a colon at the end of the line?
+    "scenario : cyberbullying"
+                              ^
 
 Ren'Py Version: Ren'Py 8.2.0.24012702
-Fri Feb 23 21:09:49 2024
+Sat Feb 24 09:01:28 2024
