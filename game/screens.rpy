@@ -284,7 +284,114 @@ style quick_button_text:
 ##
 ## This screen is included in the main and game menus, and provides navigation
 ## to other menus, and to start the game.
+# Define the chatbot screen
+# Define the chatbot screen
+default user_input = ""
+default chatbot_response = ""
+default response_displayed = False
+default previousmsg = ""
 
+init python:
+    import urllib.request
+    import json
+    import os
+    import ssl
+
+    def allowSelfSignedHttps(allowed):
+        # bypass the server certificate verification on client side
+        if allowed and not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None):
+            ssl._create_default_https_context = ssl._create_unverified_context
+
+    allowSelfSignedHttps(True) # this line is needed if you use self-signed certificate in your scoring service.
+
+    # Define a function to call the chatbot function and update the chatbot_response variable
+    def chatbot_action(message):
+        global chatbot_response
+        global response_displayed
+
+        # Request data goes here
+        data = {
+            "input_data": {
+                "input_string": [
+                    {
+                        "role": "user",
+                        "content": message
+                    }
+                ],
+                "parameters": {
+                    "temperature": 0.6,
+                    "top_p": 0.9,
+                    "do_sample": True,
+                    "max_new_tokens": 200,
+                    "return_full_text": False
+                }
+            }
+        }
+
+        body = str.encode(json.dumps(data))
+
+        url = 'https://legalchat-hodfq.eastus2.inference.ml.azure.com/score'
+        # Replace this with the primary/secondary key or AMLToken for the endpoint
+        api_key = 'Bbjv0ssE5nedQkyccdCPvHo5MbBgJqde'
+        if not api_key:
+            raise Exception("A key should be provided to invoke the endpoint")
+
+        # The azureml-model-deployment header will force the request to go to a specific deployment.
+        # Remove this header to have the request observe the endpoint traffic rules
+        headers = {'Content-Type':'application/json', 'Authorization':('Bearer '+ api_key), 'azureml-model-deployment': 'mistralai-mistral-7b-instruct-5' }
+
+        req = urllib.request.Request(url, body, headers)
+
+        try:
+            response = urllib.request.urlopen(req)
+            result = response.read()
+            result_json = json.loads(result)
+            output_text = result_json["output"]
+            chatbot_response = f'CHATBOT : {output_text}'
+            response_displayed = True
+            print(result)
+        except urllib.error.HTTPError as error:
+            print("The request failed with status code: " + str(error.code))
+
+            # Print the headers - they include the requert ID and the timestamp, which are useful for debugging the failure
+            print(error.info())
+            print(error.read().decode("utf8", 'ignore'))
+# Set the width of the input field
+screen chatbot():
+    vbox:
+        xalign 0.65
+        yalign 0.0
+        xmaximum 700
+
+        # Chatbot title with appropriate size and alignment
+        null height 50
+        text "MY LEGAL BOT" size 50 align (0.5, 0.0)
+        null height 200
+
+        # Frame with spacing for layout
+        frame:
+            # Adjusted hbox spacing to create space between input and button
+            vbox:
+                xsize 700
+                if response_displayed:
+                    if "[previousmsg]":
+                        text "YOU: [previousmsg]" size 20
+                    null height 10
+                    text "[chatbot_response]" size 20
+                hbox:
+                # Input field with fixed width and no dynamic adjustment
+                    input value VariableInputValue("user_input") length 400 xsize 680 ysize 50
+                    # Optional: Align input to the center horizontally
+
+                    # Send button with fixed position relative to the input field
+                button:
+                    text "Send"
+                    xalign 0  # Align button to the right edge within the hbox
+                    # Maintain current action and variable updates
+                    action [Function(chatbot_action, user_input), SetVariable("user_input", ""), SetVariable("response_displayed", True), SetVariable("previousmsg", user_input)]
+
+                # Conditional text display with appropriate sizeds
+                # Optional: Set alignment for the response text as needed
 screen navigation():
 
     vbox:
@@ -316,7 +423,8 @@ screen navigation():
         elif not main_menu:
 
             textbutton _("Main Menu") action MainMenu()
-
+        textbutton _("Chat") action ShowMenu("chatbot")
+        # textbutton _("Get help") action ShowMenu("gethelp")
         textbutton _("About") action ShowMenu("about")
 
         if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
